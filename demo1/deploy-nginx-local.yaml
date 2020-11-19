@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-nginx
+  namespace: demo
+spec:
+  selector:
+    matchLabels:
+      run: demo-nginx
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        run: demo-nginx
+    spec:
+      volumes:
+      - name: shared-data
+        persistentVolumeClaim:
+         claimName: demo-pv-claim    
+      containers:
+      - name: demo-nginx
+        image: nginx
+        ports:
+        - containerPort: 80
+        volumeMounts:
+        - name: shared-data
+          mountPath: /usr/share/nginx/html
